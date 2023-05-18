@@ -3,6 +3,9 @@ package repository;
 import model.Employee;
 import model.Gender;
 
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,16 +14,17 @@ import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmployeeRepositoryImpl implements EmployeeRepository {
+public class EmployeeRepositoryImpl extends UnicastRemoteObject implements EmployeeRepository {
 
     private final Connection connection;
 
-    public EmployeeRepositoryImpl() {
+    public EmployeeRepositoryImpl() throws RemoteException {
+        super();
         this.connection = MySqlConnectionFactory.getInstance().getConnection();
     }
 
     @Override
-    public Employee findById(Long employeeID) throws Exception {
+    public Employee findById(Long employeeID) throws RemoteException, Exception {
         String sql = "SELECT * FROM employee WHERE id = ?";
         PreparedStatement statement = connection.prepareStatement(sql);
 
@@ -40,7 +44,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     }
 
     @Override
-    public List<Employee> findAll() throws Exception {
+    public List<Employee> findAll() throws RemoteException, Exception {
         List<Employee> employees = new ArrayList<>();
         String sql = "SELECT * FROM employee";
         PreparedStatement statement = connection.prepareStatement(sql);
@@ -61,8 +65,9 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         return employees;
     }
 
-    @Override
-    public Long create(Employee employee) throws Exception {
+@Override
+    public Long create(Employee employee) throws RemoteException, Exception {
+        System.out.println("Called");
         String sql = "INSERT INTO employee (id, name, department, gender, age, year) VALUES (?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
@@ -81,8 +86,9 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         return null;
     }
 
+
     @Override
-    public boolean update(Employee employee) throws Exception {
+    public boolean update(Employee employee) throws RemoteException, Exception {
         String sql = "UPDATE employee SET name = ?, department = ?, gender = ?, age = ?, year = ? WHERE id = ?";
         PreparedStatement statement = connection.prepareStatement(sql);
 
@@ -99,7 +105,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     }
 
     @Override
-    public boolean deleteById(Long id) throws Exception {
+    public boolean deleteById(Long id) throws RemoteException, Exception {
         String sql = "DELETE FROM employee WHERE id = ?";
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setLong(1, id);
@@ -108,7 +114,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     }
 
     @Override
-    public void deleteAll() throws Exception {
+    public void deleteAll() throws RemoteException, Exception {
         String sql = "DELETE FROM employee WHERE 1 = 1";
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.executeUpdate();

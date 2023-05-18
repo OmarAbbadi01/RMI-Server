@@ -17,7 +17,6 @@ public class MySqlConnectionFactory {
 
     private void establishConnection() {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
             this.connection = DriverManager.getConnection("jdbc:MySql://localhost:3306/" + this.getDatabaseName() + "?serverTimezone=Asia/Hebron"
                     , this.getUsername(), this.getPassword());
         } catch (Exception e) {

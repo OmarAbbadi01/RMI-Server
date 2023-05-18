@@ -1,8 +1,9 @@
 package model;
 
+import java.io.Serializable;
 import java.time.Year;
 
-public class Employee {
+public class Employee implements Serializable {
 
     private Long id;
 
@@ -74,5 +75,17 @@ public class Employee {
 
     public void setYear(Year year) {
         this.year = year;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", department='" + department + '\'' +
+                ", gender=" + gender +
+                ", age=" + age +
+                ", year=" + year +
+                "}\n";
     }
 }
